@@ -36,3 +36,13 @@ module "keyvault" {
     module.ServicePrincipal
   ]
 }
+
+resource "azurerm_key_vault_secret" "example" {
+  name         = module.ServicePrincipal.client_id
+  value        = module.ServicePrincipal.client_secret
+  key_vault_id = module.keyvault.keyvault_id
+
+  depends_on = [
+    module.keyvault
+  ]
+}
