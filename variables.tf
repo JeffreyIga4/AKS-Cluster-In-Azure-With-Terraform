@@ -16,3 +16,7 @@ variable "service_principal_name" {
 variable "SUB_ID" {
   type = string
 }
+
+variable "keyvault_name" {
+  type = string
+}

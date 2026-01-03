@@ -1,3 +1,4 @@
+# Create an Azure AD application and service principal
 data "azuread_client_config" "current" {}
 
 resource "azuread_application" "main" {
