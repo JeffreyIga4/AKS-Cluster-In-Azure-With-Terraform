@@ -46,3 +46,18 @@ resource "azurerm_key_vault_secret" "example" {
     module.keyvault
   ]
 }
+
+# Create Azure Kubernetes Service
+module "aks" {
+  source                 = "./modules/aks/"
+  service_principal_name = var.service_principal_name
+  client_id              = module.ServicePrincipal.client_id
+  client_secret          = module.ServicePrincipal.client_secret
+  location               = var.location
+  resource_group_name    = var.rgname
+
+  depends_on = [
+    module.ServicePrincipal
+  ]
+
+}
