@@ -12,3 +12,7 @@ variable "location" {
 variable "service_principal_name" {
   type = string
 }
+
+variable "SUB_ID" {
+  type = string
+}

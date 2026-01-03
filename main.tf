@@ -4,7 +4,7 @@ resource "azurerm_resource_group" "rg1" {
 }
 
 module "ServicePrincipal" {
-  source                 = "../modules/ServicePrincipal"
+  source                 = "./modules/ServicePrincipal"
   service_principal_name = var.service_principal_name
 
   depends_on = [
@@ -12,3 +12,13 @@ module "ServicePrincipal" {
   ]
 }
 
+resource "azurerm_role_assignment" "rolespn" {
+
+  scope                = "/subscriptions/${var.SUB_ID}"
+  role_definition_name = "Contributor"
+  principal_id         = module.ServicePrincipal.service_principal_object_id
+
+  depends_on = [
+    module.ServicePrincipal
+  ]
+}
