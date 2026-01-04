@@ -2,7 +2,7 @@ data "azurerm_kubernetes_service_versions" "current" {
   location = var.location
   include_preview = false  
 }
- 
+
 
 resource "azurerm_kubernetes_cluster" "aks-cluster" {
   name                  = "jeffrey-aks-cluster"
@@ -40,9 +40,10 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
 
   linux_profile {
     admin_username = "ubuntu"
+
     ssh_key {
-        key_data = trimspace(file(var.ssh_public_key))
-    }
+    key_data = var.ssh_public_key
+  }
   }
 
   network_profile {
