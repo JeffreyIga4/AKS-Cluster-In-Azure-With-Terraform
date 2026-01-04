@@ -11,6 +11,8 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
   dns_prefix            = "${var.resource_group_name}-cluster"           
   kubernetes_version    =  data.azurerm_kubernetes_service_versions.current.latest_version
   node_resource_group = "${var.resource_group_name}-nrg"
+
+
   
   default_node_pool {
     name       = "defaultpool"

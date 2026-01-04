@@ -1,7 +1,27 @@
+data "azurerm_client_config" "current" {}
+
+
 resource "azurerm_resource_group" "rg1" {
   name     = var.rgname
   location = var.location
 }
+
+resource "tls_private_key" "aks_ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "azurerm_role_assignment" "kv_secrets_officer_tf" {
+  scope                = module.keyvault.keyvault_id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
+
+  depends_on = [
+    module.keyvault
+  ]
+}
+
+
 
 module "ServicePrincipal" {
   source                 = "./modules/ServicePrincipal"
@@ -43,7 +63,7 @@ resource "azurerm_key_vault_secret" "example" {
   key_vault_id = module.keyvault.keyvault_id
 
   depends_on = [
-    module.keyvault
+    azurerm_role_assignment.kv_secrets_officer_tf
   ]
 }
 
@@ -53,14 +73,8 @@ resource "azurerm_key_vault_secret" "aks_ssh_private_key" {
   key_vault_id = module.keyvault.keyvault_id
 
   depends_on = [
-    module.keyvault
+    azurerm_role_assignment.kv_secrets_officer_tf
   ]
-}
-
-
-resource "tls_private_key" "aks_ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
 }
 
 # Create Azure Kubernetes Service
